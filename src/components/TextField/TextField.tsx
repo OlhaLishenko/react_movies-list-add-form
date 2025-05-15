@@ -9,7 +9,7 @@ type Props = {
   required?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   setDisabled: (arg: boolean) => void;
-  validate: (nane: string, value: string) => string | null;
+  validate: (name: string, value: string) => string | null;
 };
 
 function getRandomDigits() {
@@ -32,8 +32,8 @@ export const TextField: React.FC<Props> = ({
 
   // To show errors only if the field was touched (onBlur)
   const [touched, setTouched] = useState(false);
-  const hasError = touched && validationMessage;
-  const isRequired = required === true && value.length > 0;
+  const hasError = touched && Boolean(validationMessage);
+  // const isRequired = required === true && value.length > 0;
 
   return (
     <div className="field">
@@ -56,7 +56,7 @@ export const TextField: React.FC<Props> = ({
             setTouched(true);
             {
               // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-              isRequired && setDisabled(false);
+              setDisabled(validationMessage === null && false);
             }
           }}
         />
