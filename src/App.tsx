@@ -13,7 +13,6 @@ export const App = () => {
   const [movies, setMovies] = useState<Movie[]>(initMovies);
 
   const addMovie = (newMovie: Movie) => {
-    debugger;
     setMovies(currentMovies => [newMovie, ...currentMovies]);
   };
 

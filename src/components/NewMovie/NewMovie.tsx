@@ -12,7 +12,6 @@ export const NewMovie: React.FC<Props> = ({ onSubmit }) => {
   const [count, setCount] = useState(0);
 
   const [title, setTitle] = useState('');
-  // const [titleError, setTitleError] = useState(false);
 
   const [description, setDescription] = useState('');
 
@@ -43,7 +42,7 @@ export const NewMovie: React.FC<Props> = ({ onSubmit }) => {
     setImdbUrl(event.target.value);
   };
 
-  const handleImdbIdlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImdbIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setImdbId(event.target.value);
   };
 
@@ -58,20 +57,46 @@ export const NewMovie: React.FC<Props> = ({ onSubmit }) => {
     setCount(prev => prev + 1);
   };
 
+  const validate = (name: string, value: string): string | null => {
+    switch (name) {
+      case 'title':
+        if (!value.trim()) {
+          return 'Title is required';
+        }
+
+        if (value.trim().length < 2) {
+          return 'Title must be at least 2 characters';
+        }
+
+        return null;
+
+      case 'description':
+        if (!value.trim()) {
+          return 'Write some text';
+        }
+
+        return null;
+
+      case 'imgUrl':
+      case 'imdbUrl': {
+        const pattern =
+          // eslint-disable-next-line max-len
+          /^((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w-_]*)?\??(?:[-+=&;%@,.\w_]*)#?(?:[,.!/\\\w]*))?)$/;
+
+        if (!pattern.test(value)) {
+          return `Type correct URL for ${name}`;
+        }
+
+        return null;
+      }
+
+      default:
+        return null;
+    }
+  };
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-
-    // setTitleError(!title);
-
-    // const pattern =
-    //   // eslint-disable-next-line max-len
-    //   /^((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w-_]*)?\??(?:[-+=&;%@,.\w_]*)#?(?:[,.!/\\\w]*))?)$/;
-
-    // if (pattern.test(imgUrl) === false) {
-    //   setImgUrlError('Type correct URL of image');
-    // }
-
-    // if (!title || )
 
     onSubmit({
       title,
@@ -96,6 +121,7 @@ export const NewMovie: React.FC<Props> = ({ onSubmit }) => {
         onChange={handleTitleChange}
         setDisabled={setDisabled}
         required
+        validate={validate}
       />
 
       <TextField
@@ -104,6 +130,7 @@ export const NewMovie: React.FC<Props> = ({ onSubmit }) => {
         value={description}
         onChange={handleDescriptionChange}
         setDisabled={setDisabled}
+        validate={validate}
       />
 
       <TextField
@@ -112,7 +139,7 @@ export const NewMovie: React.FC<Props> = ({ onSubmit }) => {
         value={imgUrl}
         onChange={handleImgUrlChange}
         setDisabled={setDisabled}
-        // imgUrlError={imgUrlError}
+        validate={validate}
       />
 
       <TextField
@@ -121,14 +148,16 @@ export const NewMovie: React.FC<Props> = ({ onSubmit }) => {
         value={imdbUrl}
         onChange={handleImdbUrlChange}
         setDisabled={setDisabled}
+        validate={validate}
       />
 
       <TextField
         name="imdbId"
         label="Imdb ID"
         value={imdbId}
-        onChange={handleImdbIdlChange}
+        onChange={handleImdbIdChange}
         setDisabled={setDisabled}
+        validate={validate}
       />
 
       <div className="field is-grouped">

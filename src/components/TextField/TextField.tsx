@@ -9,8 +9,7 @@ type Props = {
   required?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   setDisabled: (arg: boolean) => void;
-  // imgUrlError: string;
-  // submited: boolean;
+  validate: (nane: string, value: string) => string | null;
 };
 
 function getRandomDigits() {
@@ -25,22 +24,16 @@ export const TextField: React.FC<Props> = ({
   required = false,
   onChange = () => {},
   setDisabled,
-  // imgUrlError,
-  // submited,
+  validate,
 }) => {
   // generate a unique id once on component load
   const [id] = useState(() => `${name}-${getRandomDigits()}`);
+  const validationMessage = validate(name, value);
 
   // To show errors only if the field was touched (onBlur)
   const [touched, setTouched] = useState(false);
-  const hasError = touched && required && !value;
-  const isRequired = required && value;
-  // const imageURLError = name === 'imgUrl' && imgUrlError;
-
-  // const makeError =
-  //   (hasError || imageURLError) && (
-  //     <p className="help is-danger">{`${label} is required`}</p>
-  //   );
+  const hasError = touched && validationMessage;
+  const isRequired = required === true && value.length > 0;
 
   return (
     <div className="field">
@@ -68,8 +61,7 @@ export const TextField: React.FC<Props> = ({
           }}
         />
       </div>
-
-      {hasError && <p className="help is-danger">{`${label} is required`}</p>}
+      {hasError && <p className="help is-danger">{validationMessage}</p>}
     </div>
   );
 };
