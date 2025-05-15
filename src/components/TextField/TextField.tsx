@@ -7,7 +7,10 @@ type Props = {
   label?: string;
   placeholder?: string;
   required?: boolean;
-  onChange?: (newValue: string) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  setDisabled: (arg: boolean) => void;
+  // imgUrlError: string;
+  // submited: boolean;
 };
 
 function getRandomDigits() {
@@ -21,6 +24,9 @@ export const TextField: React.FC<Props> = ({
   placeholder = `Enter ${label}`,
   required = false,
   onChange = () => {},
+  setDisabled,
+  // imgUrlError,
+  // submited,
 }) => {
   // generate a unique id once on component load
   const [id] = useState(() => `${name}-${getRandomDigits()}`);
@@ -28,6 +34,13 @@ export const TextField: React.FC<Props> = ({
   // To show errors only if the field was touched (onBlur)
   const [touched, setTouched] = useState(false);
   const hasError = touched && required && !value;
+  const isRequired = required && value;
+  // const imageURLError = name === 'imgUrl' && imgUrlError;
+
+  // const makeError =
+  //   (hasError || imageURLError) && (
+  //     <p className="help is-danger">{`${label} is required`}</p>
+  //   );
 
   return (
     <div className="field">
@@ -45,8 +58,14 @@ export const TextField: React.FC<Props> = ({
           })}
           placeholder={placeholder}
           value={value}
-          onChange={event => onChange(event.target.value)}
-          onBlur={() => setTouched(true)}
+          onChange={onChange}
+          onBlur={() => {
+            setTouched(true);
+            {
+              // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+              isRequired && setDisabled(false);
+            }
+          }}
         />
       </div>
 
